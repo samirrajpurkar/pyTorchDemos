@@ -43,3 +43,9 @@ print('Index into a 3D Tensor & get a matrix', T[0])
 
 r3d = torch.randn(3, 4, 5)
 
+# Operations with Tensors
+x = torch.Tensor([1., 2., 3.])
+y = torch.Tensor([4., 5., 6.])
+z = x + y
+print(z)
+
