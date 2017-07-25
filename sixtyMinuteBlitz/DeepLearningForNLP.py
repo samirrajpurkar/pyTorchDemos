@@ -77,4 +77,8 @@ print('x', x)
 print('reshape to 2 rows, 12 columns', x.view(2, 12))
 print('same as above', x.view(2, -1))
 
+# Computation Graphs
+# and Automatic Differentiation
+
+
 
