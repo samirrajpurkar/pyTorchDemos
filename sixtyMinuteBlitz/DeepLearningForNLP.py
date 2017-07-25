@@ -69,4 +69,12 @@ print('y_2', y_2)
 z_2 = torch.cat([x_2, y_2], 1)
 print('z_2', z_2)
 
+# reshaping Tensors
+# use the .view() method to reshape a tensor
+
+x = torch.randn(2, 3, 4)
+print('x', x)
+print('reshape to 2 rows, 12 columns', x.view(2, 12))
+print('same as above', x.view(2, -1))
+
 
