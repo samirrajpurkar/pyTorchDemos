@@ -77,19 +77,19 @@ def main():
 
     # run on test data before we train,
     # just to see a before-and-after
-    #
-    # for instance, label in test_data:
-    #     bow_vector = autograd.Variable(make_bow_vector(instance, word_to_ix))
-    #     log_probs = model(bow_vector)
-    #     # print ("Log P test_data before train", log_probs, label)
-    #
-    # # Print the matrix column corresponding to "creo"
-    # print("pre - creo", next(model.parameters())[:, word_to_ix["creo"]])
+
+    for instance, label in test_data:
+        bow_vector = autograd.Variable(make_bow_vector(instance, word_to_ix))
+        log_probs = model(bow_vector)
+
+    # Print the matrix column corresponding to "creo"
+    print("print the matrix column corresponding to creo before training",
+          next(model.parameters())[:, word_to_ix["creo"]])
 
     loss_function = nn.NLLLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.1)
 
-    for epoch in range(1):
+    for epoch in range(10):
         for instance, label in data:
             # Step 1: remmber that pytorch accumulates gradients
             # we need to clear them out before each instance
@@ -102,15 +102,15 @@ def main():
             # of log probabilities is the log probability corresponding
             # to SPANISH
             bow_vector = autograd.Variable(make_bow_vector(instance, word_to_ix))
-            print('bow_vector', bow_vector)
+            # print('bow_vector', bow_vector)
 
             target = autograd.Variable(make_target(label, label_to_ix))
-            print('target', target, label)
+            # print('target', target, label)
 
             # Step 3:
             # run our forward pass
             log_probs = model(bow_vector)
-            print('Log P', log_probs)
+            # print('Log P', log_probs)
 
             # Step 4:
             # Compute the loss, gradients, and update the paramaters
@@ -119,14 +119,21 @@ def main():
             loss.backward()
             optimizer.step()
 
-    # for instance, label in test_data:
-    #     bow_vector = autograd.Variable(make_bow_vector(instance, word_to_ix))
-    #     log_probs = model(bow_vector)
-    #     print("Log P test_data after train", log_probs, label)
+            # One Epoch over
+            # print('-------------- Epoch -------------------------')
+
+    for instance, label in test_data:
+        bow_vector = autograd.Variable(make_bow_vector(instance, word_to_ix))
+        log_probs = model(bow_vector)
+        print("Log P test_data after train", log_probs, label)
 
     # Index corresponding to Spanish goes up,
     # English goes down
-    # print("Post - creo", next(model.parameters())[:, word_to_ix["creo"]])
+    print("The matrix column corresponding to creo after training\n",
+          "index corresponding to Spanish goes up - which is first row,\n",
+          "index corresponding to Engish goes down - which is the second row\n",
+          next(model.parameters())[:, word_to_ix["creo"]])
+
 
 
 def test():
@@ -146,4 +153,4 @@ def test():
 
 
 if __name__ == '__main__':
-   main()
+    main()
