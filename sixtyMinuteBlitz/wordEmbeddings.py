@@ -13,12 +13,16 @@ class NGramLanguageModeler(nn.Module):
         self.linear2 = nn.Linear(128, vocab_size)
 
     def forward(self, inputs):
+        print('inputs', inputs)
+        print('embeddings', self.embeddings)
         embeds = self.embeddings(inputs).view((1, -1))
-        print('embeds', embeds)
-        out = F.relu(self.linear1(embeds))
-        out = self.linear2(out)
-        log_probs = F.log_softmax((out))
-        return log_probs
+        print('embeds', self.embeddings(inputs))
+        print('embeds', self.embeddings(inputs).view(1, -1))
+        #out = F.relu(self.linear1(embeds))
+        #out = self.linear2(out)
+        #log_probs = F.log_softmax((out))
+        #return log_probs
+        return
 
 
 CONTEXT_SIZE = 2
