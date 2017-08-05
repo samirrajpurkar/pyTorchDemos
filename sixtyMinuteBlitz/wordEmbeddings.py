@@ -13,17 +13,15 @@ class NGramLanguageModeler(nn.Module):
         self.linear2 = nn.Linear(128, vocab_size)
 
     def forward(self, inputs):
-        print('inputs', inputs)
-        print('embeddings', self.embeddings)
+        #print('inputs', inputs)
+        #print('embeddings', self.embeddings)
         embeds = self.embeddings(inputs).view((1, -1))
-        print('embeds', self.embeddings(inputs))
-        print('embeds', self.embeddings(inputs).view(1, -1))
-        #out = F.relu(self.linear1(embeds))
-        #out = self.linear2(out)
-        #log_probs = F.log_softmax((out))
-        #return log_probs
-        return
-
+        #print('embeds', self.embeddings(inputs))
+        #print('embeds', self.embeddings(inputs).view(1, -1))
+        out = F.relu(self.linear1(embeds))
+        out = self.linear2(out)
+        log_probs = F.log_softmax((out))
+        return log_probs
 
 CONTEXT_SIZE = 2
 EMBEDDING_DIM = 10
@@ -62,7 +60,7 @@ def main():
     model = NGramLanguageModeler(len(vocab), EMBEDDING_DIM, CONTEXT_SIZE)
     optimizer = optim.SGD(model.parameters(), lr=0.001)
 
-    for epoch in range(1):
+    for epoch in range(100):
         total_loss = torch.Tensor([0])
         for context, target in trigrams[:1]:
             # Step 1.
@@ -83,6 +81,24 @@ def main():
             # Step 3. Run the forward pass, getting log probabilities over next
             # words
             log_probs = model(context_var)
+
+            # Step 4:
+            # Compute loss function
+            # Torch wants the target
+            # word wrapped in a variable)
+            loss = loss_function(log_probs, autograd.Variable(torch.LongTensor([word_to_ix[target]])))
+
+            # Step 5:
+            # Do the backward pass and update
+            # the gradient
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.data
+
+        losses.append((total_loss))
+
+    print(losses)
 
 
 
